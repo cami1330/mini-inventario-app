@@ -63,7 +63,7 @@ function agregarProducto(){
 
 function eliminarProducto(index){
   
-  let confrimar=confirm("¿seguro deseas eliminar el producto?");
+  let confirmar=confirm("¿seguro deseas eliminar el producto?");
   
   if(!confirmar){
     return;
