@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inventario</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+<h1>Inventario de mi negocio<h1>
+  <p id="mensaje"></p>
+   <input type="text" id="buscar" placeholder="Buscar Producto">
+   <button onClick="buscarProducto()">Buscar</button>
+  <input type="text" id="nombre" placeholder="Nombre del producto">
+  <input type="number" id="precio" placeholder="Precio">
+  <button onClick="agregarProducto()">Agregar</button>
+ <button onClick="ordenarMenor()">Ordenar menor a mayor</button>
+   <button onClick="ordenarMayor()">Ordenar mayor a menor</button>
+  <ul id="lista-productos"></ul>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
