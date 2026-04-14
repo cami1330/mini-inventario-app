@@ -1,9 +1,11 @@
 let inventario=JSON.parse(localStorage.getItem("inventario")) ||[
   {nombre:"pan",
-  precio:2000
+  precio:2000,
+  cantidad:0
   },
   {nombre:"leche",
-  precio:3500
+  precio:3500,
+  cantidad:0
   }
 ];
 let lista =document.getElementById("lista-productos");
@@ -23,14 +25,18 @@ function mostrarProductos(){
     let li =document.createElement("li");
     li.innerHTML=`<span>
   <strong>${producto.nombre}</strong><br>
-  $${producto.precio} (${producto.categoria})
+  $${producto.precio} |cantidad: ${producto.cantidad} (${producto.categoria})<br> total:$${producto.precio*producto.cantidad}|
 </span>
+
+<button onClick="disminuirCantidad(${index})">➖</button>
+<button onClick="aumentarCantidad(${index})">➕</button>
      <button  onclick="eliminarProducto(${index})">❌</button> 
       <button onclick="mostrarFormularioEditar(${index})">✏️</button>
       
       <div id="editar-${index}" style="display:none; margin-top:10px;">
       <input type="text"id="nombre-${index}" value="${producto.nombre}">
       <input type="number" id="precio-${index}" value="${producto.precio}">
+      <input type="number" id="cantidad-${index}" value="${producto.cantidad}">
       <input type="text" id="categoria-${index}" value="${producto.categoria}">
         <button onclick="guardarEdicion(${index})">Guardar</button>
          <button onclick="cancelarGuardarDatos(${index})">Cancelar</button>
@@ -52,9 +58,10 @@ function agregarProducto(){
   
   let nombre=document.getElementById("nombre").value;
   let precio=document.getElementById("precio").value;
+  let cantidad=document.getElementById("cantidad").value;
   let categoria=document.getElementById("categoria").value;
   
-  if(nombre===""||precio===""){
+  if(nombre===""||precio==="" || cantidad===""){
     alert("por favor completa todos los campos");
     return;
   }
@@ -62,6 +69,7 @@ function agregarProducto(){
   inventario.push({
     nombre:nombre,
   precio:Number(precio),
+    cantidad:Number(cantidad),
     categoria:categoria
   });
   
@@ -71,6 +79,7 @@ function agregarProducto(){
  
  document.getElementById("nombre").value="";
  document.getElementById("precio").value="";
+  document.getElementById("cantidad").value="";
   
   
   mostrarProductos();
@@ -95,12 +104,13 @@ function guardarEdicion(index) {
  
   let nuevoNombre=document.getElementById(`nombre-${index}`).value;
   let nuevoPrecio = document.getElementById(`precio-${index}`).value;
+  let nuevaCantidad=document.getElementById(`cantidad-${index}`).value;
   let nuevaCategoria = document.getElementById(`categoria-${index}`).value;
 
   inventario[index].nombre = nuevoNombre;
   inventario[index].precio = Number(nuevoPrecio);
+  inventario[index].cantidad=Number(nuevaCantidad);
   inventario[index].categoria = nuevaCategoria;
-
   
   let form=document.getElementById(`editar-${index}`);
   form.style.display="none";
@@ -120,7 +130,7 @@ function buscarProducto() {
 
   resultados.forEach(producto => {
     let li = document.createElement("li");
-    li.textContent = `${producto.nombre} - $${producto.precio}`;
+    li.textContent = `${producto.nombre} - $${producto.precio}-${producto.cantidad}`;
     lista.appendChild(li);
   });
 }
@@ -165,7 +175,21 @@ function mostrarFormularioEditar(index){
   form.style.display="block"
 ;
 
+  
 }
+
+//CERRAR DIV DE INVENTARIO TOTAL 
+
+function cerrarYAbrirTotalInventario(){
+  let inv=document.getElementById("divInventario");
+ if(inv.style.display === "none"){
+   inv.style.display="block";
+ }else{
+   inv.style.display="none";
+ };
+}
+
+
   //boton de cancelar en el formulario de editar
 function cancelarGuardarDatos(index){
  
@@ -173,4 +197,59 @@ function cancelarGuardarDatos(index){
   form.style.display="none";
 
 }
+//calcular el total del inventario 
+function actualizarResumen(){
+  //contador de la cantidad de producto que hay
+  let contador=inventario.length;
+  
+ 
+let totalCantidad = inventario.reduce((acumu, producto) => {
+    return acumu + producto.cantidad;
+  }, 0);
+  
+   //total de dinero
+ let total=inventario.reduce((acumulador,producto)=>{
+   return acumulador+ (producto.precio*producto.cantidad);
+ }, 0);
+ 
+ document.getElementById("total").textContent=`Total de dinero:${total}` ;
+ document.getElementById("contador").textContent=`Productos registrados:${contador}`;
+  
+  document.getElementById("cantidad1").textContent=`Cantidad total de productos:${totalCantidad}`;
+}
+
+function disminuirCantidad(index){
+  
+  //if para que no disminuya si es menor a cero
+  if(inventario[index] > 1){
+  inventario[index].cantidad--;
+  }
+  guardarDatos();
+  mostrarProductos();
+  actualizarResumen();
+}
+
+function aumentarCantidad(index){
+  inventario[index].cantidad++;
+  guardarDatos();
+  mostrarProductos();
+  actualizarResumen();
+}
+
+
+//vaciar inventario
+
+function vaciarInventario(){
+  let confirmar=confirm("¿Seguro que quieres eliminar todo el inventario?");
+   if(!confirmar) return;
+   inventario = [];
+
+  guardarDatos();
+  mostrarProductos();
+  actualizarResumen();
+  mostrarMensaje("Inventario eliminado");
+  
+}
+//llamar funciones
  mostrarProductos();
+actualizarResumen();
