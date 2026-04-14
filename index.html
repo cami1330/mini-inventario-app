@@ -3,7 +3,6 @@
 <head>
   <title>Inventario</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -14,20 +13,33 @@
    <button onClick="buscarProducto()">Buscar</button>
   <input type="text" id="nombre" placeholder="Nombre del producto">
   <input type="number" id="precio" placeholder="Precio">
+  <input type="number" id="cantidad" placeholder="cantidad">
   <select id="categoria">
     <option value="panaderia">Panaderia</option>
-     <option value="bebidas">Bedidas</option>
+     <option value="bebidas">Bebidas</option>
      <option value="aseo">Aseo</option>
   </select>
   <button onClick="agregarProducto()">Agregar</button>
+    <button onClick="cerrarYAbrirTotalInventario()">Total inventario</button>
+  
+   <div class="containerTotalInventario" id="divInventario" style="display:none">
+     <h2 class="titulo2">Total Del Inventario</h2>
+  <p id="contador"></p>
+  <p id="cantidad1"></p>
+   <p id="total"></p>
+    
+  </div>
  <button onClick="ordenarMenor()">Ordenar menor a mayor</button>
    <button onClick="ordenarMayor()">Ordenar mayor a menor</button>
   <button onClick="filtrarCategoria('panaderia')">Productos de panaderia</button>
   <button onClick="filtrarCategoria('bebidas')">Bebidas</button>
   <button onClick="filtrarCategoria('aseo')">Aseo</button>
   <button onClick="mostrarProductos()">Productos</button>
+  <button onClick="vaciarInventario()">Vaciar Inventario</button>
+
   <ul id="lista-productos"></ul>
   
+ 
   </div>
   
   
